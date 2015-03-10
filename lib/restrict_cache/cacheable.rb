@@ -42,6 +42,10 @@ module RestrictCache
       @cache_collection[key]
     end
 
+    def cache_keys
+      CacheKey::ALL
+    end
+
     private
       def inner_cache(key)
         @cache_collection[key] ||= self.class.build_inner_cache(key)

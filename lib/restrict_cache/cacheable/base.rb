@@ -12,6 +12,10 @@ module RestrictCache
       def contents(_table_name)
         raise NotImplementedError
       end
+
+      def size
+        @caches.size
+      end
     end
   end
 end
