@@ -1,10 +1,6 @@
 module RestrictCache
   class Cacheable
-    class ActiveRecordCache
-      def initialize
-        @caches = {}
-      end
-
+    class ActiveRecordCache < Base
       def add(content)
         @caches[table_name(content)] ||= {}
         @caches[table_name(content)][content.id] = content
