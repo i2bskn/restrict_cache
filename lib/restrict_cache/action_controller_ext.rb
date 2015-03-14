@@ -4,7 +4,9 @@ module RestrictCache
 
     module ClassMethods
       def cache_sweep_action(*args)
-        options = args.empty? {} : {only: args}
+        options = args.extract_options!
+        actions = args.empty? ? {} : {only: args}
+        options.merge! actions unless actions.empty?
         around_action :sweep_restrict_cache, options
       end
     end

@@ -20,6 +20,10 @@ Or install it yourself as:
 
 ## Usage
 
+Using the middleware or callbacks to clear the cache for each request.  
+
+#### Rack Middleware
+
 ```ruby
 module MyApp
   class Application < Rails::Application
@@ -27,6 +31,8 @@ module MyApp
   end
 end
 ```
+
+#### Callbacks (Around Action)
 
 ```ruby
 class MyModel < ActiveRecord::Base; end
@@ -46,3 +52,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
