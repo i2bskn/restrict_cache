@@ -9,7 +9,8 @@ module RestrictCache
       end
 
       ActiveSupport.on_load(:active_record) do
-         ::ActiveRecord::Base.send(:include, RestrictCache::ActiveRecordExt)
+         ::ActiveRecord::Base.send(:include, RestrictCache::ActiveRecordExt::Base)
+         ::ActiveRecord::Relation.send(:include, RestrictCache::ActiveRecordExt::Relation)
       end
     end
   end

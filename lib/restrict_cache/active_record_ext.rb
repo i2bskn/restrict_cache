@@ -1,10 +1,20 @@
 module RestrictCache
   module ActiveRecordExt
-    extend ActiveSupport::Concern
+    module Base
+      extend ActiveSupport::Concern
 
-    AR_CACHE_KEY = Cacheable::CacheKey::ACTIVERECORD
+      module ClassMethods
+        delegate :find_with_restrict_cache, to: :all
+      end
 
-    module ClassMethods
+      def restrict_cache
+        RestrictCache.add(self)
+      end
+    end
+
+    module Relation
+      AR_CACHE_KEY = Cacheable::CacheKey::ACTIVERECORD
+
       def find_and_restrict_cache(arg)
         records = find(arg)
         Array(records).each(&:restrict_cache)
@@ -12,7 +22,7 @@ module RestrictCache
       end
 
       def find_from_restrict_cache(arg)
-        contents = RestrictCache.cache.send(AR_CACHE_KEY).contents(self.table_name)
+        contents = RestrictCache.send(AR_CACHE_KEY).contents(self.table_name)
         return nil unless contents
 
         case arg
@@ -36,17 +46,18 @@ module RestrictCache
         end
       end
 
+      def with_restrict_cache
+        self.each(&:restrict_cache)
+        self
+      end
+
       private
         def restrict_cached?(args)
-          content = RestrictCache.cache.send(AR_CACHE_KEY).contents(self.table_name)
+          content = RestrictCache.send(AR_CACHE_KEY).contents(self.table_name)
           return false unless content
           ids = content.keys
           args.all? {|index| ids.include?(index) }
         end
-    end
-
-    def restrict_cache
-      RestrictCache.cache.add(self)
     end
   end
 end
