@@ -35,6 +35,15 @@ end
 #### Callbacks (Around Action)
 
 ```ruby
+class MyController < ApplicationController
+  # cache_sweep_action :index, :show
+  cache_sweep_action
+end
+```
+
+#### ActiveRecord Cache
+
+```ruby
 class MyModel < ActiveRecord::Base; end
 MyModel.find_with_restrict_cache(id_or_ids)
 ```

@@ -2,7 +2,7 @@ module RestrictCache
   module Accessible
     THREAD_KEY = :restrict_cache
 
-    def collection
+    def cache
       Thread.current[THREAD_KEY] ||= Cacheable.new
     end
 

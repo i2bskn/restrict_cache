@@ -1,5 +1,5 @@
 module RestrictCache
-  class ActionControllerExt
+  module ActionControllerExt
     include ActiveSupport::Concern
 
     module ClassMethods

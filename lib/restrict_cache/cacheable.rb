@@ -10,10 +10,12 @@ module RestrictCache
       ALL = [ACTIVERECORD, CUSTOM]
 
       def self.get(content)
-        if defined?(ActiveRecord) && content.class < ActiveRecord::Base
-          return ACTIVERECORD
+        case
+        when defined?(ActiveRecord) && content.class < ActiveRecord::Base
+          ACTIVERECORD
+        else
+          CUSTOM
         end
-        CUSTOM
       end
     end
 

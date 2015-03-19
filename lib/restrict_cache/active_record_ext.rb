@@ -1,8 +1,8 @@
 module RestrictCache
   module ActiveRecordExt
-    def self.included(base)
-      base.extend ClassMethods
-    end
+    extend ActiveSupport::Concern
+
+    AR_CACHE_KEY = Cacheable::CacheKey::ACTIVERECORD
 
     module ClassMethods
       def find_and_restrict_cache(arg)
@@ -12,7 +12,7 @@ module RestrictCache
       end
 
       def find_from_restrict_cache(arg)
-        contents = RestrictCache.collection.active_record.contents(self.table_name)
+        contents = RestrictCache.cache.send(AR_CACHE_KEY).contents(self.table_name)
         return nil unless contents
 
         case arg
@@ -38,7 +38,7 @@ module RestrictCache
 
       private
         def restrict_cached?(args)
-          content = RestrictCache.collection.active_record.contents(self.table_name)
+          content = RestrictCache.cache.send(AR_CACHE_KEY).contents(self.table_name)
           return false unless content
           ids = content.keys
           args.all? {|index| ids.include?(index) }
@@ -46,7 +46,7 @@ module RestrictCache
     end
 
     def restrict_cache
-      RestrictCache.collection.add(self)
+      RestrictCache.cache.add(self)
     end
   end
 end
