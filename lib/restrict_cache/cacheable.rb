@@ -1,5 +1,5 @@
 require "restrict_cache/cacheable/base"
-require "restrict_cache/cacheable/active_record_cache"
+require "restrict_cache/cacheable/active_record_cache" if defined?(ActiveRecord)
 require "restrict_cache/cacheable/custom_cache"
 
 module RestrictCache

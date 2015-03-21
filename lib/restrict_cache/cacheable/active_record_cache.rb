@@ -2,8 +2,9 @@ module RestrictCache
   class Cacheable
     class ActiveRecordCache < Base
       def add(content)
-        @caches[table_name(content)] ||= {}
-        @caches[table_name(content)][content.id] = content
+        tbl_name, index = table_name_of(content), index_of(content)
+        @caches[tbl_name] ||= {}
+        @caches[tbl_name][index] = content
       end
 
       def contents(_table_name)
@@ -11,8 +12,12 @@ module RestrictCache
       end
 
       private
-        def table_name(content)
+        def table_name_of(content)
           content.class.table_name.to_sym
+        end
+
+        def index_of(content)
+          content.public_send content.class.primary_id
         end
     end
   end
