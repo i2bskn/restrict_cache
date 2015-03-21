@@ -7,7 +7,10 @@ module RestrictCache
     module CacheKey
       ACTIVERECORD = :active_record_cache
       CUSTOM = :custom_cache
-      ALL = [ACTIVERECORD, CUSTOM]
+      ALL = [
+        defined?(ActiveRecord) ? ACTIVERECORD : nil,
+        CUSTOM,
+      ].compact.freeze
 
       def self.get(content)
         case
