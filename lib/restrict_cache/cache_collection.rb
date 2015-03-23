@@ -1,9 +1,9 @@
-require "restrict_cache/cacheable/base"
-require "restrict_cache/cacheable/active_record_cache" if defined?(ActiveRecord)
-require "restrict_cache/cacheable/custom_cache"
+require "restrict_cache/cache_collection/inner_cache"
+require "restrict_cache/cache_collection/active_record_cache" if defined?(ActiveRecord)
+require "restrict_cache/cache_collection/custom_cache"
 
 module RestrictCache
-  class Cacheable
+  class CacheCollection
     module CacheKey
       ACTIVERECORD = :active_record_cache
       CUSTOM = :custom_cache
@@ -16,8 +16,10 @@ module RestrictCache
         case
         when defined?(ActiveRecord) && content.class < ActiveRecord::Base
           ACTIVERECORD
-        else
+        when content.class < RestrictCache::Base
           CUSTOM
+        else
+          raise "unknown cache class"
         end
       end
     end

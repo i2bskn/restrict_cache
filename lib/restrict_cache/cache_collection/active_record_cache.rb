@@ -1,6 +1,6 @@
 module RestrictCache
-  class Cacheable
-    class ActiveRecordCache < Base
+  class CacheCollection
+    class ActiveRecordCache < InnerCache
       def add(content)
         tbl_name, index = table_name_of(content), index_of(content)
         @caches[tbl_name] ||= {}

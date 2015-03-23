@@ -1,6 +1,6 @@
 module RestrictCache
-  class Cacheable
-    class Base
+  class CacheCollection
+    class InnerCache
       def initialize
         @caches = {}
       end

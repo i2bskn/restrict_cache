@@ -40,7 +40,7 @@ module RestrictCache
 
         private
           def cached_contents
-            RestrictCache.send(Cacheable::CacheKey::ACTIVERECORD).contents(self.table_name)
+            RestrictCache.send(CacheCollection::CacheKey::ACTIVERECORD).contents(self.table_name)
           end
 
           def restrict_cached?(*args)
