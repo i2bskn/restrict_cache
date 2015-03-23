@@ -17,7 +17,7 @@ module RestrictCache
         end
 
         def index_of(content)
-          content.public_send content.class.primary_id
+          content.public_send content.class.primary_key
         end
     end
   end

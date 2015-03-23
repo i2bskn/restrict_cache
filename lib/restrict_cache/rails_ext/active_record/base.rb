@@ -5,7 +5,9 @@ module RestrictCache
         extend ActiveSupport::Concern
 
         module ClassMethods
-          delegate :find_with_restrict_cache, to: :all
+          %i(find_with_restrict_cache find_with_rc).each do |key|
+            delegate key, to: :all
+          end
         end
 
         def restrict_cache

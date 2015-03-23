@@ -2,49 +2,50 @@ module RestrictCache
   module RailsExt
     module ActiveRecord
       module Relation
-        AR_CACHE_KEY = Cacheable::CacheKey::ACTIVERECORD
-
-        def find_and_restrict_cache(arg)
-          records = find(arg)
+        def find_and_restrict_cache(*args)
+          records = find(*args)
           Array(records).each(&:restrict_cache)
           records
         end
 
-        def find_from_restrict_cache(arg)
-          contents = RestrictCache.send(AR_CACHE_KEY).contents(self.table_name)
-          return nil unless contents
+        def find_from_restrict_cache(*args)
+          return nil unless cached_contents
 
-          case arg
+          case args.first
           when Integer
-            contents[arg]
+            cached_contents[args.first]
           when String
-            contents[arg.to_i]
+            cached_contents[args.first.to_i]
           when Array
-            args.map {|index| contents[index.to_i] }
+            args.first.map {|index| cached_contents[index.to_i] }
           else
-            raise "unknown argument: #{arg.inspect}"
+            raise "unknown argument: #{args.inspect}"
           end
         end
 
-        def find_with_restrict_cache(arg)
-          if restrict_cached?(Array(arg))
-            records = Array(arg).map {|index| find_from_restrict_cache(index) }
-            records.size > 1 ? records : records.first
+        def find_with_restrict_cache(*args, &block)
+          if restrict_cached?(*args)
+            records = find_from_restrict_cache(*args)
           else
-            find_and_restrict_cache(arg)
+            records = find_and_restrict_cache(*args)
           end
+
+          block_given? ? records.each {|record| block.call(record) } : records
         end
+        alias_method :find_with_rc, :find_with_restrict_cache
 
         def with_restrict_cache
           self.each(&:restrict_cache) && self
         end
 
         private
-          def restrict_cached?(args)
-            content = RestrictCache.send(AR_CACHE_KEY).contents(self.table_name)
-            return false unless content
-            ids = content.keys
-            args.all? {|index| ids.include?(index) }
+          def cached_contents
+            RestrictCache.send(Cacheable::CacheKey::ACTIVERECORD).contents(self.table_name)
+          end
+
+          def restrict_cached?(*args)
+            return false unless cached_contents
+            args.all? {|index| cached_contents.include?(index) }
           end
       end
     end
