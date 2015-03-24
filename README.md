@@ -1,5 +1,8 @@
 # RestrictCache
 
+[![Gem Version](https://badge.fury.io/rb/restrict_cache.svg)](http://badge.fury.io/rb/restrict_cache)
+[![Code Climate](https://codeclimate.com/github/i2bskn/restrict_cache/badges/gpa.svg)](https://codeclimate.com/github/i2bskn/restrict_cache)
+
 Restricted cache in the rack request.
 
 ## Installation
@@ -41,7 +44,7 @@ MyModel.find_with_rc(id_or_ids)
 Generation of custom cache class by inheriting the `RestrictCache::Base`.  
 Custom cache class behaves like `ActiveSupport::PerThreadRegistry`.
 
-```
+```ruby
 class MyCache < RestrictCache::Base
   attr_accessor :my_value
 end
