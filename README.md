@@ -20,9 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-Using the middleware or callbacks to clear the cache for each request.  
-
-#### Rack Middleware
+Using the middleware to clear the cache for each request.
 
 ```ruby
 module MyApp
@@ -32,20 +30,23 @@ module MyApp
 end
 ```
 
-#### Callbacks (Around Action)
-
-```ruby
-class MyController < ApplicationController
-  # cache_sweep_action :index, :show
-  cache_sweep_action
-end
-```
-
-#### ActiveRecord Cache
+Caching the object of ActiveRecord by using the `find_with_rc`.  
+Get record of the same id in the request from the cache.
 
 ```ruby
 class MyModel < ActiveRecord::Base; end
-MyModel.find_with_restrict_cache(id_or_ids)
+MyModel.find_with_rc(id_or_ids)
+```
+
+Generation of custom cache class by inheriting the `RestrictCache::Base`.  
+Custom cache class behaves like `ActiveSupport::PerThreadRegistry`.
+
+```
+class MyCache < RestrictCache::Base
+  attr_accessor :my_value
+end
+
+MyCache.my_value = "caching value"
 ```
 
 ## Development
