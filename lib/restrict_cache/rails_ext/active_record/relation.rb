@@ -2,12 +2,6 @@ module RestrictCache
   module RailsExt
     module ActiveRecord
       module Relation
-        def find_and_restrict_cache(*args)
-          records = find(*args)
-          Array(records).each(&:restrict_cache)
-          records
-        end
-
         def find_from_restrict_cache(*args)
           return nil unless cached_contents
 
@@ -37,6 +31,7 @@ module RestrictCache
         def with_restrict_cache
           self.each(&:restrict_cache) && self
         end
+        alias_method :with_rc, :with_restrict_cache
 
         private
           def cached_contents
@@ -46,6 +41,12 @@ module RestrictCache
           def restrict_cached?(*args)
             return false unless cached_contents
             args.all? {|index| cached_contents.include?(index) }
+          end
+
+          def find_and_restrict_cache(*args)
+            records = find(*args)
+            Array(records).each(&:restrict_cache)
+            records
           end
       end
     end
